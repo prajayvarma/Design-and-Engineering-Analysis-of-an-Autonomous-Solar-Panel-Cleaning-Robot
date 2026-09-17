@@ -70,84 +70,133 @@ Fail-Safe Holding: If power drops or an edge sensor trips continuously, motors e
 💻 Control Logic Program (Arduino C++)
 
 // Autonomous Solar Panel Cleaning Robot Control Firmware
+
 // Target: Arduino Uno R3 + L298N Motor Driver + Relays + 4x IR Edge Sensors
 
 // Motor Driver Pin Assignments
-const int ENA = 5;  // PWM Left
+
+const int ENA = 5; 
+// PWM Left
 const int IN1 = 6;
+
 const int IN2 = 7;
+
 const int IN3 = 8;
+
 const int IN4 = 9;
+
 const int ENB = 10; // PWM Right
 
 // Relay Pin Assignments
+
 const int RELAY_BRUSH = 11;
+
 const int RELAY_PUMP  = 12;
 
 // IR Edge Sensors (Active LOW)
+
 const int IR_FRONT_LEFT  = 2;
+
 const int IR_FRONT_RIGHT = 3;
+
 const int IR_REAR_LEFT   = 4;
+
 const int IR_REAR_RIGHT  = A0;
 
 void setup() {
+
   pinMode(ENA, OUTPUT);
+  
   pinMode(IN1, OUTPUT);
+  
   pinMode(IN2, OUTPUT);
+  
   pinMode(IN3, OUTPUT);
+  
   pinMode(IN4, OUTPUT);
+  
   pinMode(ENB, OUTPUT);
 
   pinMode(RELAY_BRUSH, OUTPUT);
+  
   pinMode(RELAY_PUMP, OUTPUT);
 
   pinMode(IR_FRONT_LEFT, INPUT);
+  
   pinMode(IR_FRONT_RIGHT, INPUT);
+  
   pinMode(IR_REAR_LEFT, INPUT);
+  
   pinMode(IR_REAR_RIGHT, INPUT);
 
   // Turn ON Cleaning Modules
+  
   digitalWrite(RELAY_BRUSH, HIGH);
+  
   digitalWrite(RELAY_PUMP, HIGH);
 
   setDriveSpeed(180, 180);
 }
 
 void loop() {
+
   bool fl = digitalRead(IR_FRONT_LEFT);
+  
   bool fr = digitalRead(IR_FRONT_RIGHT);
 
   // Surface Boundary Handling
+  
   if (fl == LOW || fr == LOW) {
+  
     // Edge Encountered -> Reverse and Spin Turn
+    
     moveBackward();
+    
     delay(600);
+    
     turnRight();
+    
     delay(450);
+    
   } else {
+  
     // Normal Forward Sweeping
+    
     moveForward();
+    
   }
 }
 
 void moveForward() {
+
   digitalWrite(IN1, HIGH); digitalWrite(IN2, LOW);
+  
   digitalWrite(IN3, HIGH); digitalWrite(IN4, LOW);
+  
 }
 
 void moveBackward() {
+
   digitalWrite(IN1, LOW); digitalWrite(IN2, HIGH);
+  
   digitalWrite(IN3, LOW); digitalWrite(IN4, HIGH);
+  
 }
 
 void turnRight() {
+
   digitalWrite(IN1, HIGH); digitalWrite(IN2, LOW);
+  
   digitalWrite(IN3, LOW); digitalWrite(IN4, HIGH);
+  
 }
 
 void setDriveSpeed(int leftSpeed, int rightSpeed) {
+
   analogWrite(ENA, leftSpeed);
+  
   analogWrite(ENB, rightSpeed);
+  
 }
 
 ✅ Advantages
